@@ -22,7 +22,11 @@ print("7 - DNS Query Flood (rootfrei)")
 # Auswahl der Methode
 method = input("Wähle die Angriffsmethode (1/2/3/4/5/6/7): ")
 ip = input("Ziel-IP-Adresse (oder Domain für HTTP/DNS): ")
-port = int(input("Port (nur für UDP, TCP, SYN relevant, z. B. 80): "))
+
+# Port nur für bestimmte Methoden anfragen
+port = None
+if method in ["1", "2", "4"]:
+    port = int(input("Port (z. B. 80): "))
 
 # UDP Flood
 if method == "1":
