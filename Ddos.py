@@ -6,6 +6,11 @@ from datetime import datetime
 import subprocess
 from scapy.all import *
 
+# Root-Rechte prüfen
+if os.geteuid() != 0:
+    print("Dieses Skript erfordert Root-Rechte. Bitte starte es mit 'sudo' oder 'tsu'.")
+    exit(1)
+
 # Begrüßung
 os.system("clear")
 os.system("figlet Attack Script")
