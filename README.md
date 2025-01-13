@@ -6,5 +6,5 @@ pkg install figlet
 tsu
 git clone https://github.com/Beoky/Ddos
 cd Ddos
-chmod +x Ddos.py
-python3 Ddos.py
+chmod +x V1.py
+python3 V1.py
