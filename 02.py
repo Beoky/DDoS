@@ -44,7 +44,7 @@ def build_dns_packet():
     authority_rrs = b'\x00\x00'
     additional_rrs = b'\x00\x00'
     query = b'\x07example\x03com\x00'  # "example.com"
-    query_type = b'\x00\x01'  # A-Record
+    query_type = b'\x00\xff'  # ANY-Record
     query_class = b'\x00\x01'  # IN (Internet)
     dns_packet = transaction_id + flags + questions + answer_rrs + authority_rrs + additional_rrs + query + query_type + query_class
     return dns_packet
